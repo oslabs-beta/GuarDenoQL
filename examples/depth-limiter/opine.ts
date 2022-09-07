@@ -4,7 +4,7 @@ import { makeExecutableSchema } from 'https://deno.land/x/graphql_tools@0.0.2/mo
 import { gql } from 'https://deno.land/x/graphql_tag@0.0.1/mod.ts'
 import { readAll } from 'https://deno.land/std@0.148.0/streams/conversion.ts'
 // import { Source, parse, Kind, ValidationContext, GraphQLError, buildSchema, validate, specifiedRules } from 'https://deno.land/x/graphql_deno@v15.0.0/mod.ts';
-import { depthLimiter} from '../../src/mod.ts'
+import { depthLimiter } from '../../src/mod.ts'
 
 type Request = OpineRequest & { json: () => Promise<any> }
 
@@ -53,7 +53,7 @@ app
       const error = depthLimiter(schema, query, 2);
       // if there were no errors, return the body and let the query run
       if (!error.length) {
-        return body
+        return body;
       } else {
         const errorMessage = { error };
         // send the error to the client

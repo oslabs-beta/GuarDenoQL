@@ -1,9 +1,4 @@
-import { opine, OpineRequest } from 'https://deno.land/x/opine@2.2.0/mod.ts'
-import { GraphQLHTTP } from 'https://deno.land/x/gql@1.1.2/mod.ts'
-import { makeExecutableSchema } from 'https://deno.land/x/graphql_tools@0.0.2/mod.ts'
-import { gql } from 'https://deno.land/x/graphql_tag@0.0.1/mod.ts'
-import { readAll } from 'https://deno.land/std@0.148.0/streams/conversion.ts'
-// import { Source, parse, Kind, ValidationContext, GraphQLError, buildSchema, validate, specifiedRules } from 'https://deno.land/x/graphql_deno@v15.0.0/mod.ts';
+import { opine, OpineRequest, GraphQLHTTP, makeExecutableSchema, gql, readAll } from '../../deps.ts'
 import { depthLimiter } from '../../src/mod.ts'
 
 type Request = OpineRequest & { json: () => Promise<any> }

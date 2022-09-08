@@ -1,8 +1,4 @@
-import { Server } from 'https://deno.land/std@0.148.0/http/server.ts'
-import { GraphQLHTTP } from 'https://deno.land/x/gql@1.1.2/mod.ts'
-import { makeExecutableSchema } from 'https://deno.land/x/graphql_tools@0.0.2/mod.ts'
-import { gql } from 'https://deno.land/x/graphql_tag@0.0.1/mod.ts'
-import { readAll } from 'https://deno.land/std@0.148.0/streams/conversion.ts'
+import { Server, GraphQLHTTP, makeExecutableSchema, gql, readAll } from '../../deps.ts'
 
 const typeDefs = gql`
   type Query {
@@ -55,49 +51,3 @@ const s = new Server({
 s.listenAndServe()
 
 console.log(`☁  Started on http://localhost:3000`)
-
-// SERVER: http://localhost:3000/graphql
-
-// EXAMPLE NESTED QUERY
-// query {
-//   posts {
-//     id
-//     title
-//     related {
-//       id
-//       title
-//       related {
-//         id
-//         title
-//         related {
-//           id
-//           title
-//           related {
-//             id
-//             title
-//             related {
-//               id
-//               title
-//               related {
-//                 id
-//                 title
-//                 related {
-//                   id
-//                   title
-//                   related {
-//                     id
-//                     title
-//                     related {
-//                       id
-//                       title
-//                     }
-//                   }
-//                 }
-//               }
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// }

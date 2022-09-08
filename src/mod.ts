@@ -1,10 +1,10 @@
-import { Source, parse, Kind, ValidationContext, GraphQLError, buildSchema, validate, specifiedRules, NullValueNode } from 'https://deno.land/x/graphql_deno@v15.0.0/mod.ts';
+import { Source, parse, Kind, ValidationContext, GraphQLError, buildSchema, validate, specifiedRules, NullValueNode, GraphQLSchema, DefinitionNode } from '../deps.ts'
 
 type Maybe<T> = T | null | undefined;
 
 
 function depthLimit(maxDepth: number) {
-  return (validationContext<T>) => {
+  return (validationContext: ValidationContext) => {
     // console.log('max depth is: ', maxDepth)
     // const documentAST = parse(new Source(query));
     // const validationContext = new ValidationContext(schema, documentAST);
@@ -27,7 +27,7 @@ function depthLimit(maxDepth: number) {
   }
 }
 
-function getFragments(definitions: Array<{kind: string, name: {value: string}}>) {
+function getFragments(definitions: ReadonlyArray<DefinitionNode>) {
   return definitions.reduce((map, definition) => {
     if (definition.kind === Kind.FRAGMENT_DEFINITION) {
       map[definition.name.value] = definition
@@ -37,7 +37,7 @@ function getFragments(definitions: Array<{kind: string, name: {value: string}}>)
 }
 
 // this will actually get both queries and mutations. we can basically treat those the same
-function getQueriesAndMutations(definitions: Array<{kind: string, name: string {value: string}}>) {
+function getQueriesAndMutations(definitions) {
   return definitions.reduce((map, definition) => {
     if (definition.kind === Kind.OPERATION_DEFINITION) {
       map[definition.name ? definition.name.value : ''] = definition
@@ -87,7 +87,7 @@ function determineDepth(node, fragments, depthSoFar: number, maxDepth: number, c
 
 
 // helper functions
-function createDocument(query) {
+function createDocument(query: string) {
   const source = new Source(query);
   return parse(source);
 }
@@ -95,7 +95,7 @@ function createDocument(query) {
 // idea:
 // main 'middelware' function, depthLimiter
 // invokes the validate function, passing in the schema, document from the query, and an array with specified rules (imported), and the invocation of the depthLimit function, passing in the person's desired maxDepth
-export function depthLimiter(schema, query, maxDepth: number) {
+export function depthLimiter(schema: GraphQLSchema, query: string, maxDepth: number) {
   const document = createDocument(query);
   return validate(schema, document, [...specifiedRules, depthLimit(maxDepth)]);
 }

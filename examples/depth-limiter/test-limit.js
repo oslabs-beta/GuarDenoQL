@@ -1,4 +1,4 @@
-import { Source, parse, Kind, ValidationContext, GraphQLError, buildSchema } from 'https://deno.land/x/graphql_deno@v15.0.0/mod.ts';
+import { Source, parse, Kind, ValidationContext, GraphQLError, buildSchema } from '../../deps.ts';
 
 const petMixin = `
   name: String!

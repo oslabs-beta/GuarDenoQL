@@ -41,7 +41,7 @@ app
   .use('/graphql', async (req, res) => {
     const request = req as Request
 
-    request.json = async () => {
+  request.json = async () => {
       const rawBody = await readAll(req.raw)
       const body = JSON.parse(dec.decode(rawBody))
       const query = body.query;
@@ -64,16 +64,15 @@ app
   })
   .listen(3000, () => console.log(`☁  Started on http://localhost:3000`))
 
-  
   // request.json = async () => {
-  //   const rawBody = await readAll(req.raw)
-  //   const body = JSON.parse(dec.decode(rawBody))
-  //   const query = body.query;
-  //   const error = depthLimiter(schema, query, 2);
-  //   if (!error.length) {
-  //     return body;
-  //   } else {
-  //     const errorMessage = { error };
-  //     return res.send(JSON.stringify(errorMessage));
-  //   }
-  // }
+    //   const rawBody = await readAll(req.raw)
+    //   const body = JSON.parse(dec.decode(rawBody))
+    //   const query = body.query;
+    //   const error = depthLimiter(schema, query, 2);
+    //   if (!error.length) {
+    //     return body;
+    //   } else {
+    //     const errorMessage = { error };
+    //     return res.send(JSON.stringify(errorMessage));
+    //   }
+    // }

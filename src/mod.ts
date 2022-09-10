@@ -100,6 +100,7 @@ export function depthLimiter(schema: GraphQLSchema, query: string, maxDepth: num
   return validate(schema, document, [...specifiedRules, depthLimit(maxDepth)]);
 }
 
+// Note: should the query itself count as an object?
 // input: options object
   // maxCost (number)
   // mutationCost (number)
@@ -115,16 +116,9 @@ function costLimit(options) {
     const queries = getQueriesAndMutations(definitions);
     const queryCostLimit = {};
     for (const name in queries) {
-      queryCostLimit[name] = determineCost(queries[name], fragments, 0, 0, options, validationContext, name);
+      queryCostLimit[name] = determineCost(queries[name], fragments, 0, options, validationContext, name);
     }
-    // { maxCost } = options;
-    // Object.entries(queryCostLimit).forEach((entry) => {
-    //   if (entry[1] > maxCost) {
-    //     validationContext.reportError(
-    //       new GraphQLError(`'${entry[0]}' exceeds maximum operation cost of ${maxCost}`, [queries[entry[0]]])
-    //     );
-    //   }
-    // });
+    console.log(queryCostLimit);
     return validationContext;
   } 
 }
@@ -132,12 +126,6 @@ function costLimit(options) {
 function determineCost(node, fragments, depth, options, context, operationName) {
   
   const {maxCost, mutationCost, objectCost, scalarCost, depthCostFactor, ignoreIntrospection} = options;
-
-  // if (costSoFar > maxCost){
-  //   return context.reportError(
-  //     new GraphQLError(`'${operationName}' exceeds maximum operation cost of ${maxCost}`, [node])
-  //   )
-  // }
 
   let cost = scalarCost;
   let mutation = false;
@@ -167,9 +155,16 @@ function determineCost(node, fragments, depth, options, context, operationName) 
     }
   }
 
+  if (cost > maxCost){
+    return context.reportError(
+      new GraphQLError(`'${operationName}' exceeds maximum operation cost of ${maxCost}`, [node])
+    )
+  }
+
+  console.log(`THE NODE.NAME IS: ${node.name.value} \nTHE COST IS: \n${cost}`);
+
   return cost;
 }
-
 
 export function costLimiter(schema: GraphQLSchema, query: string, options) {
   const document = createDocument(query);

@@ -13,7 +13,7 @@ function depthLimit(maxDepth: number) {
     const fragments = getFragments(definitions);
     // console.log('fragments are: ', fragments);
     const queries = getQueriesAndMutations(definitions);
-    // console.log('queries are: ', queries);
+    console.log('queries are: ', queries);
     const queryDepths = {};
     for (const name in queries) {
       // console.log('name is: ', name);
@@ -98,4 +98,80 @@ function createDocument(query: string) {
 export function depthLimiter(schema: GraphQLSchema, query: string, maxDepth: number) {
   const document = createDocument(query);
   return validate(schema, document, [...specifiedRules, depthLimit(maxDepth)]);
+}
+
+// input: options object
+  // maxCost (number)
+  // mutationCost (number)
+  // objectCost (number)
+  // scalarCost (number)
+  // depthCostFactor (number)
+  // ignoreIntrospection
+// output: function that takes ValidationContext object as an arg and returns out a ValidationContext
+function costLimit(options) {
+  return (validationContext) => {
+    const { definitions } = validationContext.getDocument();
+    const fragments = getFragments(definitions);
+    const queries = getQueriesAndMutations(definitions);
+    const queryCostLimit = {};
+    for (const name in queries) {
+      queryCostLimit[name] = determineCost(queries[name], fragments, 0, 0, options, validationContext, name);
+    }
+    // { maxCost } = options;
+    // Object.entries(queryCostLimit).forEach((entry) => {
+    //   if (entry[1] > maxCost) {
+    //     validationContext.reportError(
+    //       new GraphQLError(`'${entry[0]}' exceeds maximum operation cost of ${maxCost}`, [queries[entry[0]]])
+    //     );
+    //   }
+    // });
+    return validationContext;
+  } 
+}
+
+function determineCost(node, fragments, depth, options, context, operationName) {
+  
+  const {maxCost, mutationCost, objectCost, scalarCost, depthCostFactor, ignoreIntrospection} = options;
+
+  // if (costSoFar > maxCost){
+  //   return context.reportError(
+  //     new GraphQLError(`'${operationName}' exceeds maximum operation cost of ${maxCost}`, [node])
+  //   )
+  // }
+
+  let cost = scalarCost;
+  let mutation = false;
+
+  if (ignoreIntrospection && 'name' in node && /^__/.test(node.name.value)) {
+    return 0;
+  }
+
+  if ('operation' in node && node.operation === 'mutation') {
+    mutation = true;
+    cost = mutationCost;
+  } 
+
+  if ('selectionSet' in node && node.selectionSet) {
+    if (!mutation) {
+      cost = objectCost;
+    }
+    for (let child of node.selectionSet.selections) {
+      cost += depthCostFactor * determineCost(child, fragments, depth + 1, options, context, operationName);
+    }
+  }
+
+  if (node.kind === Kind.FRAGMENT_SPREAD && 'name' in node) {
+    const fragment = fragments[node.name?.value];
+    if (fragment) {
+      cost += depthCostFactor * determineCost(fragment, fragments, depth + 1, options, context, operationName);
+    }
+  }
+
+  return cost;
+}
+
+
+export function costLimiter(schema: GraphQLSchema, query: string, options) {
+  const document = createDocument(query);
+  return validate(schema, document, [...specifiedRules, costLimit(options)]);
 }

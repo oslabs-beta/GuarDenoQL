@@ -3,6 +3,15 @@ import { Source, parse, Kind, ValidationContext, GraphQLError, buildSchema, vali
 type Maybe<T> = T | null | undefined;
 
 
+// TODO: 
+// Depth-limiter invokes the determineDepth function passing in each query/mutation from the queries array
+// Cost-limiter only takes in the root node and recursively determines the cost of the query/mutation of that query
+// What is the difference between these two approaches? 
+
+// QUESTIONS:
+// Do we want to integrate all of our functionality into one method OR have the user invoke seperate methods
+
+// refactor to give users options about whether they want to ignore introspection queries
 function depthLimit(maxDepth: number) {
   return (validationContext: ValidationContext) => {
     // console.log('max depth is: ', maxDepth)
@@ -19,6 +28,7 @@ function depthLimit(maxDepth: number) {
       // console.log('name is: ', name);
       queryDepths[name] = determineDepth(queries[name], fragments, 0, maxDepth, validationContext, name)
     }
+    //to ignore introScpect Queries from constantly spamming terminal
     if (!Object.keys(queryDepths).includes('IntrospectionQuery')) {
       console.log('query depths are: ', queryDepths);
     }
@@ -128,21 +138,37 @@ function determineCost(node, fragments, depth, options, context, operationName) 
   const {maxCost, mutationCost, objectCost, scalarCost, depthCostFactor, ignoreIntrospection} = options;
 
   let cost = scalarCost;
-  let mutation = false;
+  // let mutation = false;
+  // console.log('Is the name prop in node?', 'name' in node);
+  // console.log('node.name is:', node.name);
+  // console.log('node.name.value is:', node.name?.value);
+  if (node.kind === Kind.OPERATION_DEFINITION) {
+    cost = 0;
+    // TODO: if it's a mutation, add in the cost for mutation
+    if ('selectionSet' in node && node.selectionSet) {
+      for (let child of node.selectionSet.selections) {
+        cost += determineCost(child, fragments, depth + 1, options, context, operationName);
+      }
+    }
+  }
 
-  if (ignoreIntrospection && 'name' in node && /^__/.test(node.name.value)) {
+  if (ignoreIntrospection && node.name !== undefined && /^__/.test(node.name?.value)) {
+    //console.log('is this reached? introspec');
     return 0;
   }
 
-  if ('operation' in node && node.operation === 'mutation') {
-    mutation = true;
-    cost = mutationCost;
-  } 
+  // if ('operation' in node && node.operation === 'mutation') {
+  //   mutation = true;
+  //   cost = mutationCost;
+  // } 
 
-  if ('selectionSet' in node && node.selectionSet) {
-    if (!mutation) {
-      cost = objectCost;
-    }
+  if (node.kind !== Kind.OPERATION_DEFINITION && 'selectionSet' in node && node.selectionSet) {
+    // console.log('Is selection set reached?');
+    // console.log('The selection set is:', node.selectionSet);
+    // if (!mutation) {
+    //   cost = objectCost;
+    // }
+    cost = objectCost;
     for (let child of node.selectionSet.selections) {
       cost += depthCostFactor * determineCost(child, fragments, depth + 1, options, context, operationName);
     }
@@ -150,6 +176,7 @@ function determineCost(node, fragments, depth, options, context, operationName) 
 
   if (node.kind === Kind.FRAGMENT_SPREAD && 'name' in node) {
     const fragment = fragments[node.name?.value];
+    //needs to test 
     if (fragment) {
       cost += depthCostFactor * determineCost(fragment, fragments, depth + 1, options, context, operationName);
     }
@@ -161,7 +188,9 @@ function determineCost(node, fragments, depth, options, context, operationName) 
     )
   }
 
-  console.log(`THE NODE.NAME IS: ${node.name.value} \nTHE COST IS: \n${cost}`);
+  // console.log(`THE NODE.NAME.VALUE IS: ${node.name.value} \nTHE COST IS: ${cost}`);
+  console.log('The node.kind is:', node.kind);
+  console.log('The for this node is:', cost);
 
   return cost;
 }

@@ -49,6 +49,7 @@ app
       // if the max depth limit is exceeded, an array with error(s) will be returned
       // store the errors array in a variable
       // const error = depthLimiter(schema, query, 2);
+      
       // input: options object
         // maxCost (number)
         // mutationCost (number)

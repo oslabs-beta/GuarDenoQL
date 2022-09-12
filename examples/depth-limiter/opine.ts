@@ -1,5 +1,5 @@
 import { opine, OpineRequest, GraphQLHTTP, makeExecutableSchema, gql, readAll } from '../../deps.ts'
-import { depthLimiter } from '../../src/mod.ts'
+import { depthLimiter, costLimiter } from '../../src/mod.ts'
 
 type Request = OpineRequest & { json: () => Promise<any> }
 
@@ -48,7 +48,26 @@ app
       // run all queries through the depth limit function
       // if the max depth limit is exceeded, an array with error(s) will be returned
       // store the errors array in a variable
-      const error = depthLimiter(schema, query, 2);
+      // const error = depthLimiter(schema, query, 2);
+      // input: options object
+        // maxCost (number)
+        // mutationCost (number)
+        // objectCost (number)
+        // scalarCost (number)
+        // depthCostFactor (number)
+        // ignoreIntrospection
+      const error = costLimiter(
+        schema, 
+        query, 
+        {
+          maxCost: 1000,
+          mutationCost: 5,
+          objectCost: 2,
+          scalarCost: 1,
+          depthCostFactor: 2,
+          ignoreIntrospection: true
+        }
+      );
       // if there were no errors, return the body and let the query run
       if (!error.length) {
         return body;

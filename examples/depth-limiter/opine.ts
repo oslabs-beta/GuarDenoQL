@@ -1,4 +1,4 @@
-import { opine, OpineRequest, GraphQLHTTP, makeExecutableSchema, gql, readAll } from '../../deps.ts'
+import { opine, OpineRequest, GraphQLHTTP, makeExecutableSchema, gql, readAll, buildSchema } from '../../deps.ts'
 import { depthLimiter, costLimiter } from '../../src/mod.ts'
 
 type Request = OpineRequest & { json: () => Promise<any> }
@@ -6,34 +6,77 @@ type Request = OpineRequest & { json: () => Promise<any> }
 // RUN COMMAND
 // deno run --allow-read --allow-net opine.ts
 
-const typeDefs = gql`
-  type Query {
-    posts: [Post]
-    post(id: ID!): Post
-  }
+// const typeDefs = gql`
+//   type Query {
+//     posts: [Post]
+//     post(id: ID!): Post
+//   }
   
-  type Post {
-    id: ID!
-    title: String!
-    related: [Post]
+//   type Post {
+//     id: ID!
+//     title: String!
+//     related: [Post]
+//   }
+// `;
+
+// const posts = [{id: "graphql", title: "Learn GraphQL!"}];
+
+// const resolvers = {
+//   Query: {
+//     posts: () => posts,
+//     post: (_, args) => posts.find((post) => post.id === args.id),
+//   },
+//   Post: {
+//     related: () => posts,
+//   },
+// };
+
+const petMixin = `
+  name: String!
+  owner: Human!
+`
+
+const schema = buildSchema(`
+  type Query {
+    user(name: String): Human
+    version: String
+    user1: Human
+    user2: Human
+    user3: Human
   }
-`;
 
-const posts = [{id: "graphql", title: "Learn GraphQL!"}];
+  type Human {
+    name: String!
+    email: String!
+    address: Address
+    pets: [Pet]
+  }
 
-const resolvers = {
-  Query: {
-    posts: () => posts,
-    post: (_, args) => posts.find((post) => post.id === args.id),
-  },
-  Post: {
-    related: () => posts,
-  },
-};
+  interface Pet {
+    ${petMixin}
+  }
+
+  type Cat {
+    ${petMixin}
+  }
+
+  type Dog {
+    ${petMixin}
+  }
+
+  type Address {
+    street: String
+    number: Int
+    city: String
+    country: String
+  }
+`);
+
 
 const dec = new TextDecoder()
 
-const schema = makeExecutableSchema({ resolvers, typeDefs })
+// const schema = makeExecutableSchema({ resolvers, typeDefs })
+// const schema = makeExecutableSchema({ typeDefs })
 
 const app = opine()
 
@@ -61,7 +104,7 @@ app
         schema, 
         query, 
         {
-          maxCost: 1000,
+          maxCost: 18,
           mutationCost: 5,
           objectCost: 2,
           scalarCost: 1,

@@ -138,6 +138,8 @@ function determineCost(node, fragments, depth, options, context, operationName) 
   const {maxCost, mutationCost, objectCost, scalarCost, depthCostFactor, ignoreIntrospection} = options;
 
   let cost = scalarCost;
+
+
   // let mutation = false;
   // console.log('Is the name prop in node?', 'name' in node);
   // console.log('node.name is:', node.name);

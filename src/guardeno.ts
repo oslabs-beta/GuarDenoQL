@@ -6,12 +6,19 @@ import {
   GraphQLSchema,
 } from "../deps.ts";
 
+import {
+  depthLimit
+} from "./protections/depth-limiter.ts";
+
+import {
+  costLimit
+} from "./protections/cost-limiter.ts";
+
 export function guarDenoQL(schema: GraphQLSchema, query: string, options) {
   const { depthLimitOptions, costLimitOptions } = options;
   const document = createDocument(query);
-  // if depthLimiter is truthy AND costLimiter is truthy
+  
   if (depthLimitOptions && costLimitOptions) {
-    // if depthLimiter DOESN'T have maxDepth prop, throw an error
     if (!depthLimitOptions.hasOwnProperty("maxDepth")) {
       throw "missing max depth property on depthLimiter!";
     }
@@ -23,7 +30,6 @@ export function guarDenoQL(schema: GraphQLSchema, query: string, options) {
       ]);
     }
   }
-  // else if depthLimiter is truthy
   else if (depthLimitOptions) {
     if (!depthLimitOptions.hasOwnProperty("maxDepth")) {
       throw "missing max depth property on depthLimiter!";
@@ -33,7 +39,6 @@ export function guarDenoQL(schema: GraphQLSchema, query: string, options) {
       depthLimit(depthLimitOptions.maxDepth),
     ]);
   }
-  // else if costLimiter is truthy
   else if (costLimitOptions) {
     if (checkCostProps(costLimitOptions)) {
       return validate(schema, document, [
@@ -42,7 +47,6 @@ export function guarDenoQL(schema: GraphQLSchema, query: string, options) {
       ]);
     }
   }
-  // else error
   else {
     throw "missing depthLimiter & costLimiter options!";
   }

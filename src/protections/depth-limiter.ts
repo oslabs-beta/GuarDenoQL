@@ -11,7 +11,7 @@ import {
 
 // TODO: 
 // refactor to give users options about whether they want to ignore introspection queries
-// refactor to have users pass in a function to invoke after completion of queryDepths (like a console log)
+// refactor to have users pass in a function to invoke after completion of queryDepths (like a console log) OPTIONAL
 export function depthLimit(maxDepth: number) {
   return (validationContext: ValidationContext) => {
     const { definitions } = validationContext.getDocument();

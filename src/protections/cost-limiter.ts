@@ -20,7 +20,7 @@ import {
   // depthCostFactor (number)
   // ignoreIntrospection
 // output: function that takes ValidationContext object as an arg and returns out a ValidationContext
-function costLimit(options) {
+export function costLimit(options) {
   return (validationContext: ValidationContext) => {
     const { definitions } = validationContext.getDocument();
     const fragments = getFragments(definitions);

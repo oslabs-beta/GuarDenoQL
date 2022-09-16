@@ -1,5 +1,5 @@
-import { opine, OpineRequest, GraphQLHTTP, makeExecutableSchema, gql, readAll } from '../../deps.ts'
-import { depthLimiter } from '../../src/mod.ts'
+import { opine, OpineRequest, GraphQLHTTP, makeExecutableSchema, gql, readAll } from '../deps.ts'
+import { depthLimiter } from '../mod.ts'
 
 type Request = OpineRequest & { json: () => Promise<any> }
 

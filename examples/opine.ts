@@ -5,9 +5,8 @@ import {
   makeExecutableSchema,
   gql,
   readAll,
-  buildSchema,
-} from "../../deps.ts";
-import { depthLimiter, costLimiter, guardenoQL } from "../../src/mod.ts";
+} from "../deps.ts";
+import { guarDenoQL } from "../mod.ts";
 
 type Request = OpineRequest & { json: () => Promise<any> };
 
@@ -185,39 +184,16 @@ app
       const rawBody = await readAll(req.raw);
       const body = JSON.parse(dec.decode(rawBody));
       const query = body.query;
-      // run all queries through the depth limit function
-      // if the max depth limit is exceeded, an array with error(s) will be returned
-      // store the errors array in a variable
-      // const error = depthLimiter(schema, query, 2);
 
-      // input: options object
-      // maxCost (number)
-      // mutationCost (number)
-      // objectCost (number)
-      // scalarCost (number)
-      // depthCostFactor (number)
-      // ignoreIntrospection
-      // const error = costLimiter(
-      //   schema,
-      //   query,
-      //   {
-      //     maxCost: 6,
-      //     mutationCost: 5,
-      //     objectCost: 2,
-      //     scalarCost: 1,
-      //     depthCostFactor: 2,
-      //     ignoreIntrospection: true
-      //   }
-      // );
       // if there were no errors, return the body and let the query run
-      const error = guardenoQL(schema, query, {
+      const error = guarDenoQL(schema, query, {
         depthLimitOptions: {
           maxDepth: 4,
         },
         costLimitOptions: {
-          // maxCost: 20,
-          // mutationCost: 5,
-          // objectCost: 2,
+          maxCost: 20,
+          mutationCost: 5,
+          objectCost: 2,
           scalarCost: 1,
           depthCostFactor: 2,
           ignoreIntrospection: true,

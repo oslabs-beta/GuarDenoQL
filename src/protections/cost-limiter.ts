@@ -79,7 +79,6 @@ function determineCost(
     if (node.operation === "mutation") {
       cost = mutationCost;
     }
-
     if ("selectionSet" in node && node.selectionSet) {
       for (const child of node.selectionSet.selections) {
         const additionalCost = determineCost(

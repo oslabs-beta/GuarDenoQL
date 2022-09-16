@@ -7,10 +7,19 @@ export type DefinitionNodeObject = {
   [key: string]: DefinitionNode,
 };
 
-export type QueryDepths = {
+export type QueryInfo = {
   [key: string]: number | undefined,
 }
 
 export interface ValidationFunc {
   (arg0: ValidationContext): ValidationContext;
 }
+
+export type CostLimitOptions = {
+  maxCost: number,
+  mutationCost: number,
+  objectCost: number,
+  scalarCost: number,
+  depthCostFactor: number
+  ignoreIntrospection: boolean,
+};

@@ -8,7 +8,7 @@ import {
 import {
   ValidationFunc,
   DefinitionNodeObject,
-  QueryDepths,
+  QueryInfo,
 } from "../types.ts";
 
 import {
@@ -25,7 +25,7 @@ export function depthLimit(maxDepth: number): ValidationFunc {
     const fragments: DefinitionNodeObject = getFragments(definitions);
     const queries: DefinitionNodeObject = getQueriesAndMutations(definitions);
 
-    const queryDepths: QueryDepths = {};
+    const queryDepths: QueryInfo = {};
     for (const name in queries) {
       queryDepths[name] = determineDepth(
         queries[name],

@@ -1,5 +1,6 @@
 import {
   DefinitionNode,
+  ValidationContext,
 } from "../deps.ts";
 
 export type DefinitionNodeObject = {
@@ -7,9 +8,9 @@ export type DefinitionNodeObject = {
 };
 
 export type QueryDepths = {
-  [key: string]: number,
+  [key: string]: number | undefined,
 }
 
-export interface ValidationFunc<ValidationContext> {
+export interface ValidationFunc {
   (arg0: ValidationContext): ValidationContext;
 }

@@ -5,6 +5,12 @@ import {
 } from "../../deps.ts";
 
 import {
+  ValidationFunc,
+  DefinitionNodeObject,
+  QueryDepths,
+} from "../types.ts";
+
+import {
   getFragments,
   getQueriesAndMutations,
 } from "./helper-functions.ts";
@@ -12,13 +18,13 @@ import {
 // TODO: 
 // refactor to give users options about whether they want to ignore introspection queries
 // refactor to have users pass in a function to invoke after completion of queryDepths (like a console log) OPTIONAL
-export function depthLimit(maxDepth: number) {
-  return (validationContext: ValidationContext) => {
+export function depthLimit(maxDepth: number): ValidationFunc<ValidationContext> {
+  return (validationContext: ValidationContext): ValidationContext => {
     const { definitions } = validationContext.getDocument();
-    const fragments = getFragments(definitions);
-    const queries = getQueriesAndMutations(definitions);
+    const fragments: DefinitionNodeObject = getFragments(definitions);
+    const queries: DefinitionNodeObject = getQueriesAndMutations(definitions);
 
-    const queryDepths = {};
+    const queryDepths: QueryDepths = {};
     for (const name in queries) {
       queryDepths[name] = determineDepth(
         queries[name],

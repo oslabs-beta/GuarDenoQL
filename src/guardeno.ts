@@ -57,7 +57,6 @@ export function guarDenoQL(schema: GraphQLSchema, query: string, options: GuarDe
   }
 }
 
-// helper function to check props on cost
 function checkCostProps(costLimiterOptions: CostLimitOptions) {
   const props = [
     "maxCost",
@@ -76,7 +75,6 @@ function checkCostProps(costLimiterOptions: CostLimitOptions) {
   }
 }
 
-// helper function to create an ast document
 function createDocument(query: string) {
   const source = new Source(query);
   return parse(source);

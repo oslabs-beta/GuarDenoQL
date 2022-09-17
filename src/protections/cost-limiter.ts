@@ -17,17 +17,6 @@ import {
   DefinitionNodeObject,
 } from "../types.ts";
 
-// TODO:
-// refactor to have users pass in a function to invoke after completion of queryDepths (like a console log) OPTIONAL
-
-// input: options object
-  // maxCost (number)
-  // mutationCost (number)
-  // objectCost (number)
-  // scalarCost (number)
-  // depthCostFactor (number)
-  // ignoreIntrospection
-// output: function that takes ValidationContext object as an arg and returns out a ValidationContext
 export function costLimit(options: CostLimitOptions): ValidationFunc {
   return (validationContext: ValidationContext) => {
     const { definitions } = validationContext.getDocument();
@@ -45,12 +34,6 @@ export function costLimit(options: CostLimitOptions): ValidationFunc {
         name
       );
     }
-
-    // log query depths for all queries except Introspection queries 
-    if (!Object.keys(queryCostLimit).includes("IntrospectionQuery")) {
-      console.log("query costs are: ", queryCostLimit);
-    }
-    
     return validationContext;
   };
 }

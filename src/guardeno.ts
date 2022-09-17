@@ -30,7 +30,7 @@ export function guarDenoQL(schema: GraphQLSchema, query: string, options: GuarDe
     if (checkCostProps(costLimitOptions)) {
       return validate(schema, document, [
         ...specifiedRules,
-        depthLimit(depthLimitOptions.maxDepth),
+        depthLimit(depthLimitOptions.maxDepth, depthLimitOptions.callback),
         costLimit(costLimitOptions),
       ]);
     }
@@ -41,7 +41,7 @@ export function guarDenoQL(schema: GraphQLSchema, query: string, options: GuarDe
     }
     return validate(schema, document, [
       ...specifiedRules,
-      depthLimit(depthLimitOptions.maxDepth),
+      depthLimit(depthLimitOptions.maxDepth, depthLimitOptions.callback),
     ]);
   }
   else if (costLimitOptions) {

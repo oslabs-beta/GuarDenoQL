@@ -34,6 +34,10 @@ export function costLimit(options: CostLimitOptions): ValidationFunc {
         name
       );
     }
+    const { callback } = options;
+    if (callback !== undefined) {
+      callback(queryCostLimit);
+    }
     return validationContext;
   };
 }

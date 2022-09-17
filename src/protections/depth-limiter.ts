@@ -16,7 +16,7 @@ import {
   getQueriesAndMutations,
 } from "./helper-functions.ts";
 
-export function depthLimit(maxDepth: number): ValidationFunc {
+export function depthLimit(maxDepth: number, callback: Function = () => {}): ValidationFunc {
   return (validationContext) => {
     const { definitions } = validationContext.getDocument();
     const fragments: DefinitionNodeObject = getFragments(definitions);
@@ -33,6 +33,7 @@ export function depthLimit(maxDepth: number): ValidationFunc {
         name
       );
     }
+    callback(queryDepths);
     return validationContext;
   };
 }

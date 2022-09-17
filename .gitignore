@@ -1,3 +1,4 @@
 # other file had
 .env
 .vscode
+.DS_Store

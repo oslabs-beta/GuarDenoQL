@@ -16,9 +16,6 @@ import {
   getQueriesAndMutations,
 } from "./helper-functions.ts";
 
-// TODO: 
-// refactor to give users options about whether they want to ignore introspection queries
-// refactor to have users pass in a function to invoke after completion of queryDepths (like a console log) OPTIONAL
 export function depthLimit(maxDepth: number): ValidationFunc {
   return (validationContext) => {
     const { definitions } = validationContext.getDocument();
@@ -36,11 +33,6 @@ export function depthLimit(maxDepth: number): ValidationFunc {
         name
       );
     }
-    // log query depths for all queries except Introspection queries 
-    if (!Object.keys(queryDepths).includes("IntrospectionQuery")) {
-      console.log("query depths are: ", queryDepths);
-    }
-
     return validationContext;
   };
 }
@@ -64,7 +56,6 @@ function determineDepth(
   
   switch (node.kind) {
     case Kind.FIELD: {
-      // by default, ignore the introspection fields which begin with double underscores
       const shouldIgnore = /^__/.test(node.name.value);
 
       if (shouldIgnore || !node.selectionSet) {

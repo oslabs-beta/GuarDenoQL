@@ -54,7 +54,6 @@ app
       const body = JSON.parse(dec.decode(rawBody));
       const query = body.query;
 
-      // if there were no errors, return the body and let the query run
       const error = guarDenoQL(schema, query, {
         depthLimitOptions: {
           maxDepth: 4,
@@ -72,7 +71,6 @@ app
         return body;
       } else {
         const errorMessage = { error };
-        // send the error to the client
         return res.send(JSON.stringify(errorMessage));
       }
     };

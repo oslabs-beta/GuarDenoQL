@@ -11,10 +11,10 @@ export type DefinitionNodeObject = {
 
 export type QueryInfo = {
   [key: string]: number | undefined,
-}
+};
 
 export interface ValidationFunc {
-  (arg0: ValidationContext): ValidationContext | ASTVisitor ;
+  (arg0: ValidationContext): ValidationContext | ASTVisitor;
 }
 
 export type CostLimitOptions = {
@@ -23,13 +23,15 @@ export type CostLimitOptions = {
   objectCost: number,
   scalarCost: number,
   depthCostFactor: number,
+  callback?: Function,
 };
 
 export type DepthLimitOptions = {
-  maxDepth: number
-}
+  maxDepth: number,
+  callback?: Function,
+};
 
 export type GuarDenoOptions = {
   depthLimitOptions: DepthLimitOptions,
-  costLimitOptions: CostLimitOptions
-}
+  costLimitOptions: CostLimitOptions,
+};

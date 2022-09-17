@@ -1,6 +1,5 @@
 import 'https://unpkg.com/mocha@10.0.0/mocha.js';
 import { depthLimit } from '../src/protections/depth-limiter.ts';
-import { costLimit } from '../src/protections/cost-limiter.ts';
 import {
     expect,
     buildSchema,

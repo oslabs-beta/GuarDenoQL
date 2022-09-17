@@ -20,6 +20,5 @@ export type CostLimitOptions = {
   mutationCost: number,
   objectCost: number,
   scalarCost: number,
-  depthCostFactor: number
-  ignoreIntrospection: boolean,
+  depthCostFactor: number,
 };

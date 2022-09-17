@@ -59,8 +59,7 @@ function checkCostProps(costLimiterOptions) {
     "mutationCost",
     "objectCost",
     "scalarCost",
-    "depthCostFactor",
-    "ignoreIntrospection",
+    "depthCostFactor"
   ];
   const badPropsArr = props.filter(
     (prop) => !costLimiterOptions.hasOwnProperty(prop)

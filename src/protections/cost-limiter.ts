@@ -69,7 +69,6 @@ function determineCost(
     objectCost,
     scalarCost,
     depthCostFactor,
-    ignoreIntrospection,
   } = options;
 
   let cost = scalarCost;

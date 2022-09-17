@@ -56,7 +56,8 @@ app
 
       const error = guarDenoQL(schema, query, {
         depthLimitOptions: {
-          maxDepth: 4,
+          maxDepth: 2,
+          callback: (args: any) => console.log('query depth is: ', args)
         },
         costLimitOptions: {
           maxCost: 20,
@@ -64,10 +65,11 @@ app
           objectCost: 2,
           scalarCost: 1,
           depthCostFactor: 2,
+          callback: (args: any) => console.log('query cost is: ', args)
         },
       });
 
-      if (error !== undefined) {
+      if (error !== undefined && !error.length) {
         return body;
       } else {
         const errorMessage = { error };

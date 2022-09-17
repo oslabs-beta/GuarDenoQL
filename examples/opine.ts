@@ -196,7 +196,6 @@ app
           objectCost: 2,
           scalarCost: 1,
           depthCostFactor: 2,
-          ignoreIntrospection: true,
         },
       });
 

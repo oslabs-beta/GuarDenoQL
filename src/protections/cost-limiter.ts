@@ -2,12 +2,20 @@ import {
   Kind,
   ValidationContext,
   GraphQLError,
+  ASTNode,
 } from "../../deps.ts";
 
 import {
   getFragments,
   getQueriesAndMutations,
 } from "./helper-functions.ts";
+
+import {
+  CostLimitOptions,
+  QueryInfo,
+  ValidationFunc,
+  DefinitionNodeObject,
+} from "../types.ts";
 
 // TODO:
 // refactor to have users pass in a function to invoke after completion of queryDepths (like a console log) OPTIONAL
@@ -20,13 +28,13 @@ import {
   // depthCostFactor (number)
   // ignoreIntrospection
 // output: function that takes ValidationContext object as an arg and returns out a ValidationContext
-export function costLimit(options) {
+export function costLimit(options: CostLimitOptions): ValidationFunc {
   return (validationContext: ValidationContext) => {
     const { definitions } = validationContext.getDocument();
     const fragments = getFragments(definitions);
     const queries = getQueriesAndMutations(definitions);
 
-    const queryCostLimit = {};
+    const queryCostLimit: QueryInfo = {};
     for (const name in queries) {
       queryCostLimit[name] = determineCost(
         queries[name],
@@ -48,20 +56,19 @@ export function costLimit(options) {
 }
 
 function determineCost(
-  node,
-  fragments,
-  depth,
-  options,
-  context,
-  operationName
-) {
+  node: ASTNode,
+  fragments: DefinitionNodeObject,
+  depth: number,
+  options: CostLimitOptions,
+  context: ValidationContext,
+  operationName: string
+): number | undefined {
   const {
     maxCost,
     mutationCost,
     objectCost,
     scalarCost,
     depthCostFactor,
-    ignoreIntrospection,
   } = options;
 
   let cost = scalarCost;
@@ -71,10 +78,9 @@ function determineCost(
     if (node.operation === "mutation") {
       cost = mutationCost;
     }
-
     if ("selectionSet" in node && node.selectionSet) {
       for (const child of node.selectionSet.selections) {
-        cost += determineCost(
+        const additionalCost = determineCost(
           child,
           fragments,
           depth + 1,
@@ -82,15 +88,15 @@ function determineCost(
           context,
           operationName
         );
+        if (additionalCost === undefined) {
+          return;
+        }
+        cost += additionalCost;
       }
     }
   }
 
-  if (
-    ignoreIntrospection &&
-    node.name !== undefined &&
-    /^__/.test(node.name?.value)
-  ) {
+  if (node.kind === Kind.FIELD && /^__/.test(node.name.value)) {
     return 0;
   }
 
@@ -101,32 +107,36 @@ function determineCost(
   ) {
     cost = objectCost;
     for (const child of node.selectionSet.selections) {
-      cost +=
-        depthCostFactor *
-        determineCost(
-          child,
-          fragments,
-          depth + 1,
-          options,
-          context,
-          operationName
-        );
+      const additionalCost = determineCost(
+        child,
+        fragments,
+        depth + 1,
+        options,
+        context,
+        operationName
+      );
+      if (additionalCost === undefined) {
+        return;
+      }
+      cost += depthCostFactor * additionalCost;
     }
   }
 
   if (node.kind === Kind.FRAGMENT_SPREAD && "name" in node) {
     const fragment = fragments[node.name?.value];
     if (fragment) {
-      cost +=
-        depthCostFactor *
-        determineCost(
-          fragment,
-          fragments,
-          depth + 1,
-          options,
-          context,
-          operationName
-        );
+      const additionalCost = determineCost(
+        fragment,
+        fragments,
+        depth + 1,
+        options,
+        context,
+        operationName
+      );
+      if (additionalCost === undefined) {
+        return;
+      }
+      cost += depthCostFactor * additionalCost;
     }
   }
 

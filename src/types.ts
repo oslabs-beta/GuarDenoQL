@@ -1,6 +1,8 @@
+
 import {
   DefinitionNode,
   ValidationContext,
+  ASTVisitor
 } from "../deps.ts";
 
 export type DefinitionNodeObject = {
@@ -12,7 +14,7 @@ export type QueryInfo = {
 }
 
 export interface ValidationFunc {
-  (arg0: ValidationContext): ValidationContext;
+  (arg0: ValidationContext): ValidationContext | ASTVisitor ;
 }
 
 export type CostLimitOptions = {
@@ -22,3 +24,12 @@ export type CostLimitOptions = {
   scalarCost: number,
   depthCostFactor: number,
 };
+
+export type DepthLimitOptions = {
+  maxDepth: number
+}
+
+export type GuarDenoOptions = {
+  depthLimitOptions: DepthLimitOptions,
+  costLimitOptions: CostLimitOptions
+}

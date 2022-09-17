@@ -1,16 +1,19 @@
 // centralize dependencies using a deps.ts file
 // what dependencies do we need?
 export {
-  Source,
-  parse,
-  Kind,
-  ValidationContext,
-  GraphQLError,
-  buildSchema,
-  validate,
-  specifiedRules,
-  GraphQLSchema,
+Source,
+parse,
+Kind,
+ValidationContext,
+GraphQLError,
+buildSchema,
+validate,
+specifiedRules,
+GraphQLSchema,
+TypeInfo
 } from 'https://deno.land/x/graphql_deno@v15.0.0/mod.ts';
+
+export type { ValidationRule, DocumentNode, ASTVisitor } from 'https://deno.land/x/graphql_deno@v15.0.0/mod.ts';
 
 export type { 
   DefinitionNode, 
@@ -26,3 +29,5 @@ export { gql } from 'https://deno.land/x/graphql_tag@0.0.1/mod.ts'
 export { readAll } from 'https://deno.land/std@0.148.0/streams/conversion.ts'
 
 export { Server } from 'https://deno.land/std@0.148.0/http/server.ts'
+
+

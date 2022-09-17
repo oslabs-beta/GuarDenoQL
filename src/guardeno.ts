@@ -14,12 +14,17 @@ import {
   costLimit
 } from "./protections/cost-limiter.ts";
 
-export function guarDenoQL(schema: GraphQLSchema, query: string, options) {
+import { 
+  GuarDenoOptions, 
+  CostLimitOptions,
+ } from "./types.ts";
+
+export function guarDenoQL(schema: GraphQLSchema, query: string, options: GuarDenoOptions) {
   const { depthLimitOptions, costLimitOptions } = options;
   const document = createDocument(query);
   
   if (depthLimitOptions && costLimitOptions) {
-    if (!depthLimitOptions.hasOwnProperty("maxDepth")) {
+    if (!depthLimitOptions.maxDepth) {
       throw "missing max depth property on depthLimiter!";
     }
     if (checkCostProps(costLimitOptions)) {
@@ -31,7 +36,7 @@ export function guarDenoQL(schema: GraphQLSchema, query: string, options) {
     }
   }
   else if (depthLimitOptions) {
-    if (!depthLimitOptions.hasOwnProperty("maxDepth")) {
+    if (!depthLimitOptions.maxDepth) {
       throw "missing max depth property on depthLimiter!";
     }
     return validate(schema, document, [
@@ -52,8 +57,8 @@ export function guarDenoQL(schema: GraphQLSchema, query: string, options) {
   }
 }
 
-//helper functions to check props on cost
-function checkCostProps(costLimiterOptions) {
+// helper function to check props on cost
+function checkCostProps(costLimiterOptions: CostLimitOptions) {
   const props = [
     "maxCost",
     "mutationCost",
@@ -62,14 +67,14 @@ function checkCostProps(costLimiterOptions) {
     "depthCostFactor"
   ];
   const badPropsArr = props.filter(
-    (prop) => !costLimiterOptions.hasOwnProperty(prop)
+    (prop) => !Object.prototype.hasOwnProperty.call(costLimiterOptions, prop)
   );
   if (badPropsArr.length) {
     throw `Error with ${badPropsArr} prop(s) on costLimiter!`;
   } else {
     return true;
   }
-};
+}
 
 // helper function to create an ast document
 function createDocument(query: string) {

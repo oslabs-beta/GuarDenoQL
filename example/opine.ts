@@ -1,17 +1,15 @@
-import {
-  opine,
-  OpineRequest,
-  GraphQLHTTP,
-  makeExecutableSchema,
-  gql,
-  readAll,
-} from "../deps.ts";
+import { opine, OpineRequest } from 'https://deno.land/x/opine@2.2.0/mod.ts';
+import { GraphQLHTTP } from 'https://deno.land/x/gql@1.1.2/mod.ts';
+import { makeExecutableSchema } from 'https://deno.land/x/graphql_tools@0.0.2/mod.ts';
+import { gql } from 'https://deno.land/x/graphql_tag@0.0.1/mod.ts';
+import { readAll } from 'https://deno.land/std@0.148.0/streams/conversion.ts';
+
 import { guarDenoQL } from "../mod.ts";
 
 type Request = OpineRequest & { json: () => Promise<any> };
 
 // RUN COMMAND
-// deno run --allow-read --allow-net examples/opine.ts
+// deno run --allow-read --allow-net example/opine.ts
 
 const typeDefs = gql`
   type Query {

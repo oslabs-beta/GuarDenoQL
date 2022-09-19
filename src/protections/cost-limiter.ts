@@ -3,6 +3,7 @@ import {
   ValidationContext,
   GraphQLError,
   ASTNode,
+  ASTVisitor,
 } from "../../deps.ts";
 
 import {
@@ -38,7 +39,7 @@ export function costLimit(options: CostLimitOptions): ValidationFunc {
     if (callback !== undefined) {
       callback(queryCostLimit);
     }
-    return validationContext;
+    return <ASTVisitor>validationContext;
   };
 }
 

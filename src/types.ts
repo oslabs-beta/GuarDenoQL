@@ -14,7 +14,7 @@ export type QueryInfo = {
 };
 
 export interface ValidationFunc {
-  (arg0: ValidationContext): ValidationContext | ASTVisitor;
+  (arg0: ValidationContext): ASTVisitor;
 }
 
 export type CostLimitOptions = {
@@ -23,12 +23,12 @@ export type CostLimitOptions = {
   objectCost: number,
   scalarCost: number,
   depthCostFactor: number,
-  callback?: Function,
+  callback?: (arg0: QueryInfo) => any,
 };
 
 export type DepthLimitOptions = {
   maxDepth: number,
-  callback?: Function,
+  callback?: (arg0: QueryInfo) => any,
 };
 
 export type GuarDenoOptions = {

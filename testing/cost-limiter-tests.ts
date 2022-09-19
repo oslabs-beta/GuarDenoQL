@@ -1,13 +1,13 @@
-import 'https://unpkg.com/mocha@10.0.0/mocha.js';
-import { costLimit } from '../src/protections/cost-limiter.ts';
+import "https://unpkg.com/mocha@10.0.0/mocha.js";
+import { costLimit } from "../src/protections/cost-limiter.ts";
 import {
   expect,
   makeExecutableSchema,
   Source,
   parse,
   validate,
-  specifiedRules
-} from '../deps.ts';
+  specifiedRules,
+} from "../deps.ts";
 
 function createDocument(query: string) {
   const source = new Source(query);
@@ -28,12 +28,12 @@ const typeDefinitions = `
 
 const books = [
   {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
+    title: "The Awakening",
+    author: "Kate Chopin",
   },
   {
-    title: 'City of Glass',
-    author: 'Paul Auster',
+    title: "City of Glass",
+    author: "Paul Auster",
   },
 ];
 
@@ -50,53 +50,66 @@ export const schema = makeExecutableSchema({
 });
 
 function onCompleted(failures: number): void {
-    if (failures > 0) {
-       Deno.exit(1);
-   } else {
-       Deno.exit(0);
-   }
+  if (failures > 0) {
+    Deno.exit(1);
+  } else {
+    Deno.exit(0);
+  }
 }
-  
-(window as any).location = new URL('http://localhost:0');
 
-mocha.setup({ ui: 'bdd', reporter: 'spec' });
+(window as any).location = new URL("http://localhost:0");
+
+mocha.setup({ ui: "bdd", reporter: "spec" });
 
 mocha.checkLeaks();
 
-describe('cost limit tests', () => {
-  
-  const query = `query {
-    books {
-      title
-      author
+describe("cost limit tests", () => {
+  const query = `
+    query {
+      books {
+        title
+        author
+      }
     }
-  }`;
+  `;
 
-  it('should work for a default query', () => {
+  it("should work for a default query", () => {
     const document = createDocument(query);
-    const errors = validate(schema, document, [ ...specifiedRules, costLimit({
-      maxCost: 20,
-      mutationCost: 5,
-      objectCost: 2,
-      scalarCost: 1,
-      depthCostFactor: 2,
-    })]);
+
+    const errors = validate(schema, document, [
+      ...specifiedRules,
+      costLimit({
+        maxCost: 20,
+        mutationCost: 5,
+        objectCost: 2,
+        scalarCost: 1,
+        depthCostFactor: 2,
+      }),
+    ]);
+
     expect(errors).toEqual([]);
   });
 
-  it('should limit cost', () => {
+  it("should limit cost", () => {
     const document = createDocument(query);
-    const errors = validate(schema, document, [...specifiedRules, costLimit({
-      maxCost: 5,
-      mutationCost: 5,
-      objectCost: 2,
-      scalarCost: 1,
-      depthCostFactor: 2,
-    })]);
-    expect(errors[0].message).toEqual("'' exceeds maximum operation cost of 5");
+
+    const errors = validate(schema, document, [
+      ...specifiedRules,
+      costLimit({
+        maxCost: 5,
+        mutationCost: 5,
+        objectCost: 2,
+        scalarCost: 1,
+        depthCostFactor: 2,
+      }),
+    ]);
+
+    expect(errors[0].message).toEqual(
+      "'' exceeds maximum operation cost of 5"
+    );
   });
 
-  it('should ignore introspection', () => {
+  it("should ignore introspection", () => {
     const introQuery = `
       query IntrospectionQuery {
         __schema {
@@ -117,50 +130,47 @@ describe('cost limit tests', () => {
         }
       }
   
-    fragment FullType on __Type {
-      kind
-      name
-      description
-      fields(includeDeprecated: true) {
+      fragment FullType on __Type {
+        kind
         name
         description
-        args {
+        fields(includeDeprecated: true) {
+          name
+          description
+          args {
+            ...InputValue
+          }
+          type {
+            ...TypeRef
+          }
+          isDeprecated
+          deprecationReason
+        }
+        inputFields {
           ...InputValue
         }
-        type {
+        interfaces {
           ...TypeRef
         }
-        isDeprecated
-        deprecationReason
+        enumValues(includeDeprecated: true) {
+          name
+          description
+          isDeprecated
+          deprecationReason
+        }
+        possibleTypes {
+          ...TypeRef
+        }
       }
-      inputFields {
-        ...InputValue
-      }
-      interfaces {
-        ...TypeRef
-      }
-      enumValues(includeDeprecated: true) {
+  
+      fragment InputValue on __InputValue {
         name
         description
-        isDeprecated
-        deprecationReason
+        type { ...TypeRef }
+        defaultValue
       }
-      possibleTypes {
-        ...TypeRef
-      }
-    }
   
-    fragment InputValue on __InputValue {
-      name
-      description
-      type { ...TypeRef }
-      defaultValue
-    }
-  
-    fragment TypeRef on __Type {
-      kind
-      name
-      ofType {
+      fragment TypeRef on __Type {
         kind
         name
         ofType {
@@ -181,6 +191,10 @@ describe('cost limit tests', () => {
                   ofType {
                     kind
                     name
+                    ofType {
+                      kind
+                      name
+                    }
                   }
                 }
               }
@@ -188,45 +202,52 @@ describe('cost limit tests', () => {
           }
         }
       }
-    }
-  `
+    `;
 
     const document = createDocument(introQuery);
-    const errors = validate(schema, document, [...specifiedRules, costLimit({
-      maxCost: 5,
-      mutationCost: 5,
-      objectCost: 2,
-      scalarCost: 1,
-      depthCostFactor: 2,
-    })]);
+
+    const errors = validate(schema, document, [
+      ...specifiedRules,
+      costLimit({
+        maxCost: 5,
+        mutationCost: 5,
+        objectCost: 2,
+        scalarCost: 1,
+        depthCostFactor: 2,
+      }),
+    ]);
+
     expect(errors).toEqual([]);
   });
 
-  it('should support fragments', () => {
+  it("should support fragments", () => {
     const fragmentQuery = `
-    query {
-      ...BookFragment
-    }
-    fragment BookFragment on Query {
-      books {
-        title
-        author
+      query {
+        ...BookFragment
       }
-    }`
+      fragment BookFragment on Query {
+        books {
+          title
+          author
+        }
+      }
+    `;
 
     const document = createDocument(fragmentQuery);
-    const errors = validate(schema, document, [...specifiedRules, costLimit({
-      maxCost: 30,
-      mutationCost: 5,
-      objectCost: 2,
-      scalarCost: 1,
-      depthCostFactor: 2,
-    })]);
+
+    const errors = validate(schema, document, [
+      ...specifiedRules,
+      costLimit({
+        maxCost: 30,
+        mutationCost: 5,
+        objectCost: 2,
+        scalarCost: 1,
+        depthCostFactor: 2,
+      }),
+    ]);
+
     expect(errors).toEqual([]);
-  })
+  });
 });
 
-
-
-
-mocha.run(onCompleted).globals(['onerror']);
+mocha.run(onCompleted).globals(["onerror"]);

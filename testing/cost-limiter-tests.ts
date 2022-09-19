@@ -1,12 +1,12 @@
-import { costLimit } from '../src/protections/cost-limiter.ts';
 import 'https://unpkg.com/mocha@10.0.0/mocha.js';
+import { costLimit } from '../src/protections/cost-limiter.ts';
 import {
-    expect,
-    makeExecutableSchema,
-    Source,
-    parse,
-    validate,
-    specifiedRules
+  expect,
+  makeExecutableSchema,
+  Source,
+  parse,
+  validate,
+  specifiedRules
 } from '../deps.ts';
 
 function createDocument(query: string) {
@@ -25,6 +25,7 @@ const typeDefinitions = `
     getBook(title: String): Book
   }
 `;
+
 const books = [
   {
     title: 'The Awakening',
@@ -82,9 +83,148 @@ describe('cost limit tests', () => {
     })]);
     expect(errors).toEqual([]);
   });
+
+  it('should limit cost', () => {
+    const document = createDocument(query);
+    const errors = validate(schema, document, [...specifiedRules, costLimit({
+      maxCost: 5,
+      mutationCost: 5,
+      objectCost: 2,
+      scalarCost: 1,
+      depthCostFactor: 2,
+    })]);
+    expect(errors[0].message).toEqual("'' exceeds maximum operation cost of 5");
+  });
+
+  it('should ignore introspection', () => {
+    const introQuery = `
+      query IntrospectionQuery {
+        __schema {
+          queryType { name }
+          mutationType { name }
+          subscriptionType { name }
+          types {
+            ...FullType
+          }
+          directives {
+            name
+            description
+            locations
+            args {
+              ...InputValue
+            }
+          }
+        }
+      }
+  
+    fragment FullType on __Type {
+      kind
+      name
+      description
+      fields(includeDeprecated: true) {
+        name
+        description
+        args {
+          ...InputValue
+        }
+        type {
+          ...TypeRef
+        }
+        isDeprecated
+        deprecationReason
+      }
+      inputFields {
+        ...InputValue
+      }
+      interfaces {
+        ...TypeRef
+      }
+      enumValues(includeDeprecated: true) {
+        name
+        description
+        isDeprecated
+        deprecationReason
+      }
+      possibleTypes {
+        ...TypeRef
+      }
+    }
+  
+    fragment InputValue on __InputValue {
+      name
+      description
+      type { ...TypeRef }
+      defaultValue
+    }
+  
+    fragment TypeRef on __Type {
+      kind
+      name
+      ofType {
+        kind
+        name
+        ofType {
+          kind
+          name
+          ofType {
+            kind
+            name
+            ofType {
+              kind
+              name
+              ofType {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                  ofType {
+                    kind
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `
+
+    const document = createDocument(introQuery);
+    const errors = validate(schema, document, [...specifiedRules, costLimit({
+      maxCost: 5,
+      mutationCost: 5,
+      objectCost: 2,
+      scalarCost: 1,
+      depthCostFactor: 2,
+    })]);
+    expect(errors).toEqual([]);
+  });
+
+  it('should support fragments', () => {
+    const fragmentQuery = `
+    query {
+      ...BookFragment
+    }
+    fragment BookFragment on Query {
+      books {
+        title
+        author
+      }
+    }`
+
+    const document = createDocument(fragmentQuery);
+    const errors = validate(schema, document, [...specifiedRules, costLimit({
+      maxCost: 30,
+      mutationCost: 5,
+      objectCost: 2,
+      scalarCost: 1,
+      depthCostFactor: 2,
+    })]);
+    expect(errors).toEqual([]);
+  })
 });
-
-
 
 
 

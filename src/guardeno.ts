@@ -23,8 +23,7 @@ export function guarDenoQL(
 
   if (depthLimitOptions && costLimitOptions) {
     if (!depthLimitOptions.maxDepth) {
-      // depth-limiter uses throw new error syntax but we only use throw here? consistency?
-      throw "missing max depth property on depthLimiter!";
+      throw "Missing max depth property on depthLimiter!";
     }
     if (checkCostProps(costLimitOptions)) {
       return validate(schema, document, [
@@ -35,7 +34,7 @@ export function guarDenoQL(
     }
   } else if (depthLimitOptions) {
     if (!depthLimitOptions.maxDepth) {
-      throw "missing max depth property on depthLimiter!";
+      throw "Missing max depth property on depthLimiter!";
     }
     return validate(schema, document, [
       ...specifiedRules,
@@ -49,11 +48,11 @@ export function guarDenoQL(
       ]);
     }
   } else {
-    throw "missing depthLimiter & costLimiter options!";
+    throw "Missing depthLimiter & costLimiter options!";
   }
 }
 
-// helper function to determine whether the correct properties of costLimiterOptions is provided
+// helper function to determine if the correct properties of costLimiterOptions are provided
 function checkCostProps(costLimiterOptions: CostLimitOptions) {
   const props = [
     "maxCost",
@@ -74,7 +73,7 @@ function checkCostProps(costLimiterOptions: CostLimitOptions) {
   }
 }
 
-// what is this function's purpose?
+// given a GraphQL source, the function parses the source into an AST, which represents a GraphQL document in a type-safe, machine-readable format
 function createDocument(query: string) {
   const source = new Source(query);
   return parse(source);

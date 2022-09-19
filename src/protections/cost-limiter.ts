@@ -54,7 +54,7 @@ function determineCost(
 
   let cost = scalarCost;
 
-  // what does this if statement address?
+  // addresses the operation type
   if (node.kind === Kind.OPERATION_DEFINITION) {
     cost = 0;
     if (node.operation === "mutation") {
@@ -107,8 +107,7 @@ function determineCost(
     }
   }
 
-  // addresses section of query that is classified as a fragment
-  // what about inline fragment, fragment_definition?
+  // addresses section of query that is classified as a fragment spread
   if (node.kind === Kind.FRAGMENT_SPREAD && 
     "name" in node
   ) {

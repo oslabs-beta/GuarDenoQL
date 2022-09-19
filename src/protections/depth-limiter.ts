@@ -45,7 +45,6 @@ function determineDepth(
   context: ValidationContext,
   operationName: string
   ): number | undefined {
-    // why is comparison of depth and maxdepth at top whereas in cost limiter it's at the bottom?
   if (depthSoFar > maxDepth) {
     return context.reportError(
       new GraphQLError(
@@ -80,7 +79,7 @@ function determineDepth(
       }
       return 1 + Math.max(...(<number[]>depthArray));
     }
-    // addresses section of query that is classified as a fragment
+    // addresses section of query that is classified as a fragment spread
     case Kind.FRAGMENT_SPREAD:
       return determineDepth(
         fragments[node.name.value],
@@ -90,8 +89,7 @@ function determineDepth(
         context,
         operationName
       );
-    // addresses section of query that is classified as a ???
-    // what is this addressing? fragment vs inline fragment vs fragment def??
+    // addresses sections of query that do not affect depth
     case Kind.INLINE_FRAGMENT:
     case Kind.FRAGMENT_DEFINITION:
     case Kind.OPERATION_DEFINITION: {
@@ -111,8 +109,8 @@ function determineDepth(
       }
       return Math.max(...(<number[]>depthArray));
     }
-    // what is depth crawler??
     default:
-      throw new Error("Uh oh! depth crawler cannot handle: " + node.kind);
-  }
+      // throw `Uh oh! depth crawler cannot handle: ${node.kind}`;
+      throw `The ${node.kind} section of the query cannot be handled by the depth limiter function.`;
+    }
 }

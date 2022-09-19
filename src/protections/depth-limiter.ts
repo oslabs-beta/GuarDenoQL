@@ -3,6 +3,7 @@ import {
   GraphQLError,
   ASTNode,
   ValidationContext,
+  ASTVisitor,
 } from "../../deps.ts";
 
 import {
@@ -34,7 +35,7 @@ export function depthLimit(maxDepth: number, callback: Function = () => {}): Val
       );
     }
     callback(queryDepths);
-    return validationContext;
+    return <ASTVisitor>validationContext;
   };
 }
 

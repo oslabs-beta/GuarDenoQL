@@ -33,19 +33,27 @@ through.
 ### Cost Limiting
 
 Queries can still be very expensive even if they aren't nested deeply. Using a
-Cost Limiter, your server will calculate the total cost of the query based on
-its types before execution.
+**Cost Limiter**, your server will calculate the total cost of the query based
+on its types before execution.
+
+<div>
+  <img src="./assets/cost-query.png">
+</div>
+
+See this article for futher information:
+https://shopify.engineering/rate-limiting-graphql-apis-calculating-query-complexity
 
 ## Getting Started
 
 A set up with [gql](https://github.com/deno-libs/gql) and
 [Opine](https://github.com/cmorten/opine) out-of-the-box:
+
 ```typescript
-import { opine, OpineRequest } from 'https://deno.land/x/opine@2.2.0/mod.ts';
-import { GraphQLHTTP } from 'https://deno.land/x/gql@1.1.2/mod.ts';
-import { makeExecutableSchema } from 'https://deno.land/x/graphql_tools@0.0.2/mod.ts';
-import { gql } from 'https://deno.land/x/graphql_tag@0.0.1/mod.ts';
-import { readAll } from 'https://deno.land/std@0.148.0/streams/conversion.ts';
+import { opine, OpineRequest } from "https://deno.land/x/opine@2.2.0/mod.ts";
+import { GraphQLHTTP } from "https://deno.land/x/gql@1.1.2/mod.ts";
+import { makeExecutableSchema } from "https://deno.land/x/graphql_tools@0.0.2/mod.ts";
+import { gql } from "https://deno.land/x/graphql_tag@0.0.1/mod.ts";
+import { readAll } from "https://deno.land/std@0.148.0/streams/conversion.ts";
 
 import { guarDenoQL } from "../mod.ts";
 
@@ -74,7 +82,7 @@ app
       const error = guarDenoQL(schema, query, {
         depthLimitOptions: {
           maxDepth: 4, // maximum depth allowed before a request is rejected
-          callback: (args) => console.log('query depth is:', args) // optional
+          callback: (args) => console.log("query depth is:", args), // optional
         },
         costLimitOptions: {
           maxCost: 5000, // maximum cost allowed before a request is rejected
@@ -82,7 +90,7 @@ app
           objectCost: 2, // cost of retrieving an object
           scalarCost: 1, // cost of retrieving a scalar
           depthCostFactor: 1.5, // multiplicative cost of each depth level
-          callback: (args) => console.log('query cost is:', args) // optional 
+          callback: (args) => console.log("query cost is:", args), // optional
         },
       });
 
@@ -105,36 +113,41 @@ app
     res.send(await resp.text());
   })
   .listen(3000, () => console.log(`☁  Started on http://localhost:3000`));
-
 ```
-GuarDenoQL is fully configurable per feature. 
+
+GuarDenoQL is fully configurable per feature.
 
 Users can use either the depth limiter, cost limiter or both.
 
-The first argument is the `schema`, the second argument is the `query` and the third argument is an `Object` with up to two properties: `depthLimitOptions` and/or `costLimitOptions`.
+The first argument is the `schema`, the second argument is the `query` and the
+third argument is an `Object` with up to two properties: `depthLimitOptions`
+and/or `costLimitOptions`.
 
 ### Depth Limit Configuration
 
-This feature limits the depth of a document. 
+This feature limits the depth of a document.
 
 ```typescript
 const error = guarDenoQL(schema, query, {
   depthLimitOptions: {
     maxDepth: 4, // maximum depth allowed before a request is rejected
-    callback: (args) => console.log('query depth is:', args) // optional
+    callback: (args) => console.log("query depth is:", args), // optional
   },
 });
 ```
 
 The `depthLimitOptions` object has two properties to configure:
 
-1. `maxDepth`: the depth limiter will throw a validation error if the document has a greater depth than the user-supplied `maxDepth`
+1. `maxDepth`: the depth limiter will throw a validation error if the document
+   has a greater depth than the user-supplied `maxDepth`
 
-2. optional `callback` function: receives an `Object` that maps the name of the operation to its corresponding query depth
+2. optional `callback` function: receives an `Object` that maps the name of the
+   operation to its corresponding query depth
 
 ### Cost Limit Configuration
 
-This feature applies a cost analysis algorithm to block queries that are too expensive.
+This feature applies a cost analysis algorithm to block queries that are too
+expensive.
 
 ```typescript
 const error = guarDenoQL(schema, query, {
@@ -144,16 +157,19 @@ const error = guarDenoQL(schema, query, {
     objectCost: 2, // cost of retrieving an object
     scalarCost: 1, // cost of retrieving a scalar
     depthCostFactor: 1.5, // multiplicative cost of each depth level
-    callback: (args) => console.log('query cost is:', args) // optional 
+    callback: (args) => console.log("query cost is:", args), // optional
   },
 });
 ```
 
 The `costLimitOptions` object has six properties to configure:
 
-1. `maxCost`: the cost limiter will throw a validation error if the document has a greater cost than the user-supplied `maxCost`
+1. `maxCost`: the cost limiter will throw a validation error if the document has
+   a greater cost than the user-supplied `maxCost`
 
-2. `mutationCost`: represents the cost of a mutation (some popular [cost analysis algorithms](https://shopify.engineering/rate-limiting-graphql-apis-calculating-query-complexity) will make mutations more expensive than queries)
+2. `mutationCost`: represents the cost of a mutation (some popular
+   [cost analysis algorithms](https://shopify.engineering/rate-limiting-graphql-apis-calculating-query-complexity)
+   will make mutations more expensive than queries)
 
 3. `objectCost`: represents the cost of an object that has subfields
 
@@ -161,12 +177,14 @@ The `costLimitOptions` object has six properties to configure:
 
 5. `depthCostFactor`: the multiplicative cost of each depth level
 
-6. optional `callback` function: receives an `Object` that maps the name of the operation to its corresponding query cost
-
+6. optional `callback` function: receives an `Object` that maps the name of the
+   operation to its corresponding query cost
 
 ## Functionality
 
-- Screenshots of graphiql playground here
+<div>
+  <img src="./assets/depth-limiter.png">
+</div>
 
 ## How to Contribute
 

@@ -7,8 +7,8 @@
 # Features
 
 - Integrates with an Opine server in a Deno runtime.
-- Enables users to customize both a _**maximum depth**_ and a _**cost limit
-  algorithm**_ for all GraphQL queries and mutations sent to the server.
+- Enables users to customize both a _**maximum depth**_ and a _**cost limit**_
+  for all GraphQL queries and mutations sent to the server.
 - Validates queries and mutations against the depth limiter and/or cost limiter
   before they are executed by the server.
 
@@ -39,9 +39,6 @@ on its types before execution.
 <div>
   <img src="./assets/cost-query.png">
 </div>
-
-See this article for futher information:
-https://shopify.engineering/rate-limiting-graphql-apis-calculating-query-complexity
 
 # Getting Started
 
@@ -115,11 +112,11 @@ app
   .listen(3000, () => console.log(`☁  Started on http://localhost:3000`));
 ```
 
-GuarDenoQL is fully configurable per feature.
+GuarDenoQL is fully customizable.
 
 Users can use either the depth limiter, cost limiter or both.
 
-The first argument is the `schema`, the second argument is the `query` and the
+The first argument is the `schema`, the second argument is the `query`, and the
 third argument is an `Object` with up to two properties: `depthLimitOptions`
 and/or `costLimitOptions`.
 
@@ -169,7 +166,7 @@ The `costLimitOptions` object has six properties to configure:
 
 2. `mutationCost`: represents the cost of a mutation (some popular
    [cost analysis algorithms](https://shopify.engineering/rate-limiting-graphql-apis-calculating-query-complexity)
-   will make mutations more expensive than queries)
+   make mutations more expensive than queries)
 
 3. `objectCost`: represents the cost of an object that has subfields
 

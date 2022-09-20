@@ -182,8 +182,16 @@ The `costLimitOptions` object has six properties to configure:
 
 ## Functionality
 
+### Depth Limiter
+
 <div>
   <img src="./assets/depth-limiter.png">
+</div>
+
+### Cost Limiter
+
+<div>
+  <img src="./assets/cost-limiter.png">
 </div>
 
 ## How to Contribute
@@ -192,59 +200,20 @@ The `costLimitOptions` object has six properties to configure:
 
 ## Authors
 
--
+Finley Decker: <a src="https://github.com/finleydecker">GitHub</a> |
+<a src="https://www.linkedin.com/in/finleydecker/">LinkedIn</a>
+
+Hannah McDowell: <a src="https://github.com/hannahmcdowell">GitHub</a> |
+<a src="https://www.linkedin.com/in/hannah-lisbeth-mcdowell/">LinkedIn</a>
+
+Jane You: <a src="https://github.com/janeyou94">GitHub</a> |
+<a src="https://www.linkedin.com/in/janeyou-pharmd-bcacp/">LinkedIn</a>
+
+Lucien Hsu: <a src="https://github.com/LBLuc">GitHub</a> |
+<a src="https://www.linkedin.com/in/lucien-hsu/">LinkedIn</a>
 
 ## License
 
-sample
-
-`deno run --allownet --unstable <filename>`
-
-SERVER: http://localhost:3000/graphql
-
-EXAMPLE NESTED QUERY
-
-```
-query {
-  posts {
-    id
-    title
-    related {
-      id
-      title
-      related {
-        id
-        title
-        related {
-          id
-          title
-          related {
-            id
-            title
-            related {
-              id
-              title
-              related {
-                id
-                title
-                related {
-                  id
-                  title
-                  related {
-                    id
-                    title
-                    related {
-                      id
-                      title
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-```
+Distributed under the MIT License. See
+<a src="https://github.com/oslabs-beta/GuarDenoQL/blob/dev/LICENSE">LICENSE</a>
+for more information.

@@ -1,10 +1,10 @@
 <div align="center">
-  <img alt="guardenoql-logo" height="350" src="assets/logo.svg">
+  <img alt="guardenoql-logo" height="350" src="assets/logo_readme.svg">
   <h1>GuarDenoQL</h1>
   <p><em>Simple and customizable security middleware for GraphQL servers in Deno.</em></p>
 </div>
 
-## Features
+# Features
 
 - Integrates with an Opine server in a Deno runtime.
 - Enables users to customize both a _**maximum depth**_ and a _**cost limit
@@ -12,9 +12,9 @@
 - Validates queries and mutations against the depth limiter and/or cost limiter
   before they are executed by the server.
 
-## Why?
+# Why?
 
-### Depth Limiting
+### **Depth Limiting**
 
 Because GraphQL schemas can be cyclic graphs, it is possible that a client could
 construct a query such as this one:
@@ -30,7 +30,7 @@ However, using a **Depth Limiter**, you can validate the depth of incoming
 queries against a user-defined limit and prevent these queries from going
 through.
 
-### Cost Limiting
+### **Cost Limiting**
 
 Queries can still be very expensive even if they aren't nested deeply. Using a
 **Cost Limiter**, your server will calculate the total cost of the query based
@@ -43,7 +43,7 @@ on its types before execution.
 See this article for futher information:
 https://shopify.engineering/rate-limiting-graphql-apis-calculating-query-complexity
 
-## Getting Started
+# Getting Started
 
 A set up with [gql](https://github.com/deno-libs/gql) and
 [Opine](https://github.com/cmorten/opine) out-of-the-box:
@@ -123,7 +123,7 @@ The first argument is the `schema`, the second argument is the `query` and the
 third argument is an `Object` with up to two properties: `depthLimitOptions`
 and/or `costLimitOptions`.
 
-### Depth Limit Configuration
+### **Depth Limit Configuration**
 
 This feature limits the depth of a document.
 
@@ -144,7 +144,7 @@ The `depthLimitOptions` object has two properties to configure:
 2. optional `callback` function: receives an `Object` that maps the name of the
    operation to its corresponding query depth
 
-### Cost Limit Configuration
+### **Cost Limit Configuration**
 
 This feature applies a cost analysis algorithm to block queries that are too
 expensive.
@@ -180,25 +180,27 @@ The `costLimitOptions` object has six properties to configure:
 6. optional `callback` function: receives an `Object` that maps the name of the
    operation to its corresponding query cost
 
-## Functionality
+# Functionality
 
-### Depth Limiter
+### **Depth Limiter**
 
 <div>
   <img src="./assets/depth-limiter.png">
 </div>
 
-### Cost Limiter
+### **Cost Limiter**
 
 <div>
   <img src="./assets/cost-limiter.png">
 </div>
 
-## How to Contribute
+# How to Contribute
 
-- Could link to CONTRIBUTING.md here with instructions
+If you would like to contribute, please see
+<a src="https://github.com/oslabs-beta/GuarDenoQL/blob/readme/CONTRIBUTING.md">CONTRIBUTING.md</a>
+for more information.
 
-## Authors
+# Authors
 
 Finley Decker: <a src="https://github.com/finleydecker">GitHub</a> |
 <a src="https://www.linkedin.com/in/finleydecker/">LinkedIn</a>
@@ -212,7 +214,7 @@ Jane You: <a src="https://github.com/janeyou94">GitHub</a> |
 Lucien Hsu: <a src="https://github.com/LBLuc">GitHub</a> |
 <a src="https://www.linkedin.com/in/lucien-hsu/">LinkedIn</a>
 
-## License
+# License
 
 Distributed under the MIT License. See
 <a src="https://github.com/oslabs-beta/GuarDenoQL/blob/dev/LICENSE">LICENSE</a>

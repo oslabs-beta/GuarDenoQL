@@ -110,7 +110,6 @@ function determineDepth(
       return Math.max(...(<number[]>depthArray));
     }
     default:
-      // throw `Uh oh! depth crawler cannot handle: ${node.kind}`;
       throw `The ${node.kind} section of the query cannot be handled by the depth limiter function.`;
     }
 }

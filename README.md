@@ -194,7 +194,7 @@ The `costLimitOptions` object has six properties to configure:
 # How to Contribute
 
 If you would like to contribute, please see
-[CONTRIBUTING.md](https://github.com/oslabs-beta/GuarDenoQL/blob/readme/CONTRIBUTING.md)
+[CONTRIBUTING.md](https://github.com/oslabs-beta/GuarDenoQL/blob/main/CONTRIBUTING.md)
 for more information.
 
 # Authors
@@ -214,5 +214,5 @@ Lucien Hsu: [GitHub](https://github.com/LBLuc) |
 # License
 
 Distributed under the MIT License. See
-[LICENSE](https://github.com/oslabs-beta/GuarDenoQL/blob/dev/LICENSE) for more
+[LICENSE](https://github.com/oslabs-beta/GuarDenoQL/blob/main/LICENSE) for more
 information.

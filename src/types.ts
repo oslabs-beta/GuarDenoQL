@@ -1,16 +1,11 @@
-
-import {
-  DefinitionNode,
-  ValidationContext,
-  ASTVisitor
-} from "../deps.ts";
+import { DefinitionNode, ValidationContext, ASTVisitor } from "../deps.ts";
 
 export type DefinitionNodeObject = {
-  [key: string]: DefinitionNode,
+  [key: string]: DefinitionNode;
 };
 
 export type QueryInfo = {
-  [key: string]: number | undefined,
+  [key: string]: number | undefined;
 };
 
 export interface ValidationFunc {
@@ -18,20 +13,20 @@ export interface ValidationFunc {
 }
 
 export type CostLimitOptions = {
-  maxCost: number,
-  mutationCost: number,
-  objectCost: number,
-  scalarCost: number,
-  depthCostFactor: number,
-  callback?: (arg0: QueryInfo) => any,
+  maxCost: number;
+  mutationCost: number;
+  objectCost: number;
+  scalarCost: number;
+  depthCostFactor: number;
+  callback?: (arg0: QueryInfo) => any;
 };
 
 export type DepthLimitOptions = {
-  maxDepth: number,
-  callback?: (arg0: QueryInfo) => any,
+  maxDepth: number;
+  callback?: (arg0: QueryInfo) => any;
 };
 
 export type GuarDenoOptions = {
-  depthLimitOptions: DepthLimitOptions,
-  costLimitOptions: CostLimitOptions,
+  depthLimitOptions: DepthLimitOptions;
+  costLimitOptions: CostLimitOptions;
 };

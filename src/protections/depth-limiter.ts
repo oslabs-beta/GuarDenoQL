@@ -6,24 +6,21 @@ import {
   ASTVisitor,
 } from "../../deps.ts";
 
-import {
-  ValidationFunc,
-  DefinitionNodeObject,
-  QueryInfo,
-} from "../types.ts";
+import { ValidationFunc, DefinitionNodeObject, QueryInfo } from "../types.ts";
 
-import {
-  getFragments,
-  getQueriesAndMutations,
-} from "./helper-functions.ts";
+import { getFragments, getQueriesAndMutations } from "./helper-functions.ts";
 
-export function depthLimit(maxDepth: number, callback: Function = () => {}): ValidationFunc {
+// creating a validation rule for depth limit that the query will be checked against, based on options specified by the user
+export function depthLimit(
+  maxDepth: number,
+  callback: Function = () => {}
+  ): ValidationFunc {
   return (validationContext) => {
     const { definitions } = validationContext.getDocument();
     const fragments: DefinitionNodeObject = getFragments(definitions);
     const queries: DefinitionNodeObject = getQueriesAndMutations(definitions);
-
     const queryDepths: QueryInfo = {};
+
     for (const name in queries) {
       queryDepths[name] = determineDepth(
         queries[name],
@@ -39,6 +36,7 @@ export function depthLimit(maxDepth: number, callback: Function = () => {}): Val
   };
 }
 
+// determine depth of specified query by traversing through sections of the query
 function determineDepth(
   node: ASTNode,
   fragments: DefinitionNodeObject,
@@ -46,7 +44,7 @@ function determineDepth(
   maxDepth: number,
   context: ValidationContext,
   operationName: string
-): number | undefined {
+  ): number | undefined {
   if (depthSoFar > maxDepth) {
     return context.reportError(
       new GraphQLError(
@@ -55,14 +53,16 @@ function determineDepth(
       )
     );
   }
-  
+
   switch (node.kind) {
+    // will ignore introspection queries
     case Kind.FIELD: {
       const shouldIgnore = /^__/.test(node.name.value);
 
       if (shouldIgnore || !node.selectionSet) {
         return 0;
       }
+
       const depthArray = node.selectionSet.selections.map((selection) =>
         determineDepth(
           selection,
@@ -73,11 +73,13 @@ function determineDepth(
           operationName
         )
       );
+
       if (depthArray.includes(undefined)) {
         return;
       }
-      return 1 + Math.max(...<number[]>depthArray);
+      return 1 + Math.max(...(<number[]>depthArray));
     }
+    // addresses section of query that is classified as a fragment spread
     case Kind.FRAGMENT_SPREAD:
       return determineDepth(
         fragments[node.name.value],
@@ -87,6 +89,7 @@ function determineDepth(
         context,
         operationName
       );
+    // addresses sections of query that do not affect depth
     case Kind.INLINE_FRAGMENT:
     case Kind.FRAGMENT_DEFINITION:
     case Kind.OPERATION_DEFINITION: {
@@ -100,12 +103,14 @@ function determineDepth(
           operationName
         )
       );
+
       if (depthArray.includes(undefined)) {
         return;
       }
-      return Math.max(...<number[]>depthArray);
+      return Math.max(...(<number[]>depthArray));
     }
     default:
-      throw new Error("Uh oh! depth crawler cannot handle: " + node.kind);
-  }
+      // throw `Uh oh! depth crawler cannot handle: ${node.kind}`;
+      throw `The ${node.kind} section of the query cannot be handled by the depth limiter function.`;
+    }
 }

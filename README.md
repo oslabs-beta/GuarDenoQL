@@ -197,25 +197,25 @@ The `costLimitOptions` object has six properties to configure:
 # How to Contribute
 
 If you would like to contribute, please see
-<a src="https://github.com/oslabs-beta/GuarDenoQL/blob/readme/CONTRIBUTING.md">CONTRIBUTING.md</a>
+[CONTRIBUTING.md](https://github.com/oslabs-beta/GuarDenoQL/blob/readme/CONTRIBUTING.md)
 for more information.
 
 # Authors
 
-Finley Decker: <a src="https://github.com/finleydecker">GitHub</a> |
-<a src="https://www.linkedin.com/in/finleydecker/">LinkedIn</a>
+Finley Decker: [GitHub](https://github.com/finleydecker) |
+[LinkedIn](https://www.linkedin.com/in/finleydecker/)
 
-Hannah McDowell: <a src="https://github.com/hannahmcdowell">GitHub</a> |
-<a src="https://www.linkedin.com/in/hannah-lisbeth-mcdowell/">LinkedIn</a>
+Hannah McDowell: [GitHub](https://github.com/hannahmcdowell) |
+[LinkedIn](https://www.linkedin.com/in/hannah-lisbeth-mcdowell/)
 
-Jane You: <a src="https://github.com/janeyou94">GitHub</a> |
-<a src="https://www.linkedin.com/in/janeyou-pharmd-bcacp/">LinkedIn</a>
+Jane You: [GitHub](https://github.com/janeyou94) |
+[LinkedIn](https://www.linkedin.com/in/janeyou-pharmd-bcacp/)
 
-Lucien Hsu: <a src="https://github.com/LBLuc">GitHub</a> |
-<a src="https://www.linkedin.com/in/lucien-hsu/">LinkedIn</a>
+Lucien Hsu: [GitHub](https://github.com/LBLuc) |
+[LinkedIn](https://www.linkedin.com/in/lucien-hsu/)
 
 # License
 
 Distributed under the MIT License. See
-<a src="https://github.com/oslabs-beta/GuarDenoQL/blob/dev/LICENSE">LICENSE</a>
-for more information.
+[LICENSE](https://github.com/oslabs-beta/GuarDenoQL/blob/dev/LICENSE) for more
+information.

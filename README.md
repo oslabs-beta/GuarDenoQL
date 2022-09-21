@@ -1,7 +1,7 @@
 <div align="center">
   <br>
   <br>
-  <img alt="guardenoql-logo" height="200" src="./assets/readme_logo.svg">
+  <img alt="guardenoql-logo" height="200" src="https://raw.githubusercontent.com/oslabs-beta/GuarDenoQL/main/assets/readme_logo.svg">
   <br>
   <br>
   <h1>GuarDenoQL</h1>
@@ -24,7 +24,7 @@ Because GraphQL schemas can be cyclic graphs, it is possible that a client could
 construct a query such as this one:
 
 <div>
-  <img src="./assets/evil-query.png">
+  <img src="https://raw.githubusercontent.com/oslabs-beta/GuarDenoQL/main/assets/evil-query.png">
 </div>
 Therefore, if nested deep enough, a malicious actor could potentially bring your server down with an abusive query.
 <br />
@@ -41,7 +41,7 @@ Queries can still be very expensive even if they aren't nested deeply. Using a
 on its types before execution.
 
 <div>
-  <img src="./assets/cost-query.png">
+  <img src="https://raw.githubusercontent.com/oslabs-beta/GuarDenoQL/main/assets/cost-query.png">
 </div>
 
 # Getting Started
@@ -56,7 +56,8 @@ import { makeExecutableSchema } from "https://deno.land/x/graphql_tools@0.0.2/mo
 import { gql } from "https://deno.land/x/graphql_tag@0.0.1/mod.ts";
 import { readAll } from "https://deno.land/std@0.148.0/streams/conversion.ts";
 
-import { guarDenoQL } from "../mod.ts";
+import { guarDenoQL } from "https://deno.land/x/guardenoql@v1.0.1/mod.ts";
+// update GuarDenoQL import URL with most recent version 
 
 type Request = OpineRequest & { json: () => Promise<any> };
 
@@ -186,13 +187,13 @@ The `costLimitOptions` object has six properties to configure:
 ### **Depth Limiter**
 
 <div>
-  <img src="./assets/depth-limiter.png">
+  <img src="https://raw.githubusercontent.com/oslabs-beta/GuarDenoQL/main/assets/depth-limiter.png">
 </div>
 
 ### **Cost Limiter**
 
 <div>
-  <img src="./assets/cost-limiter.png">
+  <img src="https://raw.githubusercontent.com/oslabs-beta/GuarDenoQL/main/assets/cost-limiter.png">
 </div>
 
 # How to Contribute

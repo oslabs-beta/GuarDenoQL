@@ -1,5 +1,9 @@
 <div align="center">
-  <img alt="guardenoql-logo" height="350" src="assets/logo_readme.svg">
+  <br>
+  <br>
+  <img alt="guardenoql-logo" height="200" src="./assets/readme_logo.svg">
+  <br>
+  <br>
   <h1>GuarDenoQL</h1>
   <p><em>Simple and customizable security middleware for GraphQL servers in Deno</em></p>
 </div>

@@ -27,6 +27,6 @@ export type DepthLimitOptions = {
 };
 
 export type GuarDenoOptions = {
-  depthLimitOptions: DepthLimitOptions;
-  costLimitOptions: CostLimitOptions;
+  depthLimitOptions?: DepthLimitOptions;
+  costLimitOptions?: CostLimitOptions;
 };

@@ -22,7 +22,7 @@ export function guarDenoQL(
   const document = createDocument(query);
 
   if (depthLimitOptions && costLimitOptions) {
-    if (!depthLimitOptions.maxDepth) {
+    if (depthLimitOptions.maxDepth === undefined) {
       throw "Missing max depth property on depthLimiter!";
     }
     if (checkCostProps(costLimitOptions)) {
@@ -33,7 +33,7 @@ export function guarDenoQL(
       ]);
     }
   } else if (depthLimitOptions) {
-    if (!depthLimitOptions.maxDepth) {
+    if (depthLimitOptions.maxDepth === undefined) {
       throw "Missing max depth property on depthLimiter!";
     }
     return validate(schema, document, [

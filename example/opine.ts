@@ -55,12 +55,12 @@ app
       const error = guarDenoQL(schema, query, {
         // customize depth limiter options
         depthLimitOptions: {
-          maxDepth: 4,
+          maxDepth: 2,
           callback: (args) => console.log("query depth is:", args),
         },
         // customize cost Limiter options
         costLimitOptions: {
-          maxCost: 5000,
+          maxCost: 5,
           mutationCost: 5,
           objectCost: 2,
           scalarCost: 1,

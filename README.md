@@ -220,3 +220,9 @@ Lucien Hsu: [GitHub](https://github.com/LBLuc) |
 Distributed under the MIT License. See
 [LICENSE](https://github.com/oslabs-beta/GuarDenoQL/blob/main/LICENSE) for more
 information.
+
+#
+
+Cost & Depth limiter were methods were inspired by these modules: [graphql-depth-limiter](https://github.com/ashfurrow/graphql-depth-limit), 
+[graphql-armor](https://github.com/Escape-Technologies/graphql-armor)
+

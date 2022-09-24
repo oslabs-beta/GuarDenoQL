@@ -223,6 +223,6 @@ information.
 
 #
 
-Cost & Depth limiter were methods were inspired by these modules: [graphql-depth-limiter](https://github.com/ashfurrow/graphql-depth-limit), 
+Cost & Depth limiter were methods were inspired by the following modules: [graphql-depth-limiter](https://github.com/ashfurrow/graphql-depth-limit), 
 [graphql-armor](https://github.com/Escape-Technologies/graphql-armor)
 
